@@ -9,16 +9,19 @@ class Prihlaseni():
             print("Zatím je systoom ve vývojové verzy. Pravidelně kontrolujte nové verze pro zpřístupnění této a mnoho dalších funkcí😀.")
     def registrace(self):
         print("Výtejte v průvodci registrací.")
-        nuzivatel = input("Jak se chceš jmenovat? ")
-        if self.uzivatelexistuje(nuzivatel):
-            print("Uživatel byl již zaregistrován, zvolte si jiné jméno")
-            self.run()
-        else:
-            self.heslo = input("Zadejte svoje budoucí heslo: ")
-            self.heslo_hash = hashlib.sha256(self.heslo.encode()).hexdigest()
-            with open("uzivatele.csv", "a", encoding="utf-8") as f:
-                zapisovac = csv.writer(f)
-                zapisovac.writerow([nuzivatel,self.heslo_hash])
+        spravne_jmeno = True
+        while spravne_jmeno:
+            spravne_jmeno = False
+            nuzivatel = input("Jak se chceš jmenovat? ")
+            if self.uzivatelexistuje(nuzivatel):
+                print("Uživatel byl již zaregistrován, zvolte si jiné jméno")
+                spravne_jmeno = True
+            else:
+                self.heslo = input("Zadejte svoje budoucí heslo: ")
+                self.heslo_hash = hashlib.sha256(self.heslo.encode()).hexdigest()
+                with open("uzivatele.csv", "a", encoding="utf-8") as f:
+                    zapisovac = csv.writer(f)
+                    zapisovac.writerow([nuzivatel,self.heslo_hash])
 
     def uzivatelexistuje(self, jmeno_uzivatele : str) -> bool:
         
