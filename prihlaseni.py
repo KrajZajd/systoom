@@ -6,6 +6,12 @@ class Prihlaseni():
     Pro aktivaci je tu funkce run \n
     Výce info o ní najdete v jejím popisu
     """
+    def hashfun(self, heslo:str, jmeno:str) ->str:
+        for i in range(1000000):
+            jmeno = hashlib.sha512(jmeno.encode()).hexdigest()    
+            heslo = hashlib.sha512(heslo.encode()).hexdigest()
+            heslo = str(heslo) + str(jmeno) + str(i) + str(i**2) 
+        return heslo
     def run(self, output:int):
         """
         Funkce pro spuštění přihlašování se vstupem 1 nebo 0(nebo cokolv jiného)\n
@@ -28,10 +34,9 @@ class Prihlaseni():
                 else:
                     print("Zadali jste špatné jméno nebo heslo")
                     spravne_udaje = True
-
     def sprvavne_udaje(self,jmeno:str, heslo:str) -> bool:
                 if self.uzivatelexistuje(jmeno):
-                    heslo_hash = hashlib.sha256(heslo.encode()).hexdigest()
+                    heslo_hash = self.hashfun(heslo, jmeno) 
                     with open("uzivatele.csv", "r", encoding="utf-8") as f:
                         ctecka = (radek for radek in csv.reader(f) if radek)
                         next(ctecka, None)  
@@ -54,7 +59,7 @@ class Prihlaseni():
                 spravne_jmeno = True
             else:
                 heslo = input("Zadejte svoje budoucí heslo: ")
-                heslo_hash = hashlib.sha256(heslo.encode()).hexdigest()
+                heslo_hash = self.hashfun(heslo, nuzivatel) 
                 with open("uzivatele.csv", "a", encoding="utf-8", newline='') as f:
                     zapisovac = csv.writer(f)
                     zapisovac.writerow( [nuzivatel,heslo_hash])
